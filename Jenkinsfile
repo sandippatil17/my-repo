@@ -17,6 +17,8 @@ pipeline {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
                     curl -sL https://snyk.io/install.sh | bash
+                    chmod +x snyk
+                    sudo mv snyk /usr/local/bin/
                     snyk auth $SNYK_TOKEN
                     snyk test --docker myapp --severity-threshold=medium || true
                     '''
