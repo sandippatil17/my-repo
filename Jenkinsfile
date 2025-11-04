@@ -16,7 +16,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
-                    curl -sL https://snyk.io/install.sh | bash
+                    curl -sL https://static.snyk.io/cli/latest/snyk-linux -o snyk
                     chmod +x snyk
                     sudo mv snyk /usr/local/bin/
                     snyk auth $SNYK_TOKEN
