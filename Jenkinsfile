@@ -16,11 +16,13 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
-                    curl -sL https://static.snyk.io/cli/latest/snyk-linux -o snyk
+                    curl -fsSL https://static.snyk.io/cli/latest/snyk-linux -o snyk
                     chmod +x snyk
-                    sudo mv snyk /usr/local/bin/
-                    snyk auth $SNYK_TOKEN
-                    snyk test --docker myapp --severity-threshold=medium || true
+                    mkdir -p ~/.local/bin
+                    mv snyk ~/.local/bin/
+                    export PATH=$PATH:~/.local/bin
+                    ~/.local/bin/snyk auth $SNYK_TOKEN
+                    ~/.local/bin/snyk test --docker myapp --severity-threshold=medium || true
                     '''
                 }
             }
