@@ -12,6 +12,17 @@ pipeline {
                 sh 'docker build -t myapp .'
             }
         }
+        stage('snyk security') {
+            steps {
+                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
+                    curl -sL https://snyk.io/install.sh | bash
+                    snyk auth $SNYK_TOKEN
+                    snyk test --docker myapp --severity-threshold=medium || true
+                    '''
+                }
+            }
+        }
         stage('docker container') {
             steps {
                 sh 'docker rm -f myappcontainer || true'
