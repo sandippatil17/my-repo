@@ -14,6 +14,7 @@ pipeline {
         }
         stage('docker container') {
             steps {
+                sh 'docker rm -rf myappcontainer || true'
                 sh 'docker run -d -p 80:80 --name myappcontainer myapp'
             }
         }
