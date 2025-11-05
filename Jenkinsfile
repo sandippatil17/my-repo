@@ -19,9 +19,8 @@ pipeline {
             sh '''
                 curl -s https://static.snyk.io/cli/latest/snyk-linux -o snyk
                 chmod +x snyk
-                mv snyk /usr/local/bin/
-                snyk auth $SNYK_TOKEN
-                snyk test --docker myapp --severity-threshold=medium || true
+                ./snyk auth $SNYK_TOKEN
+                ./snyk test --docker myapp --severity-threshold=medium || true
             '''
         }
     }
