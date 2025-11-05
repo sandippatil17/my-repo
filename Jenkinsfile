@@ -12,21 +12,21 @@ pipeline {
                 sh 'docker build -t myapp .'
             }
         }
+        
         stage('snyk security') {
             steps {
-                withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
-                    sh '''
-                    curl -fsSL https://static.snyk.io/cli/latest/snyk-linux -o snyk
-                    chmod +x snyk
-                    mkdir -p ~/.local/bin
-                    mv snyk ~/.local/bin/
-                    export PATH=$PATH:~/.local/bin
-                    ~/.local/bin/snyk auth $SNYK_TOKEN
-                    ~/.local/bin/snyk test --docker myapp --severity-threshold=medium || true
-                    '''
-                }
-            }
+        withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) {
+            sh '''
+                curl -s https://static.snyk.io/cli/latest/snyk-linux -o snyk
+                chmod +x snyk
+                mv snyk /usr/local/bin/
+                snyk auth $SNYK_TOKEN
+                snyk test --docker myapp --severity-threshold=medium || true
+            '''
         }
+    }
+}
+
         stage('docker container') {
             steps {
                 sh 'docker rm -f myappcontainer || true'
