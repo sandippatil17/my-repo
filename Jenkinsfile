@@ -19,12 +19,13 @@ pipeline {
             sh '''
                 curl -s https://static.snyk.io/cli/latest/snyk-linux -o snyk
                 chmod +x snyk
-                ./snyk auth $SNYK_TOKEN
+                ./snyk config set api=$SNYK_TOKEN
                 ./snyk test --docker myapp --severity-threshold=medium || true
             '''
         }
     }
 }
+
 
         stage('docker container') {
             steps {
